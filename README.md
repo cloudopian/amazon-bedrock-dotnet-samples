@@ -21,8 +21,7 @@ This will give your IAM user/role full access to Bedrock related APIs.
 If you are using an IAM user, create an aws access key & secret key and save it under a profile called mydevprofile.  
 `aws configure --profile mydevprofile`
 
-If you are not familiar with IAM policy and permissions watch the following videos. 
-https://www.youtube.com/watch?v=fwtmTMf53Ek
+If you are not familiar with IAM policy and permissions watch [this](https://www.youtube.com/watch?v=fwtmTMf53Ek) video
 
 
 ## Running the sample
