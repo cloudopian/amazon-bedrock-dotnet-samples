@@ -21,7 +21,7 @@ namespace MyBedrockTest.Samples
             request.ModelId = "anthropic.claude-v2";
             request.ContentType = "application/json";
             request.Accept = "application/json";
-            string body = "{\"prompt\":\"Human: What is Paris?\\n\\nAssistant:\",\"max_tokens_to_sample\":300,\"temperature\":1,\"top_k\":250,\"top_p\":0.999,\"stop_sequences\":[\"\\n\\nHuman:\"],\"anthropic_version\":\"bedrock-2023-05-31\"}";
+            string body = "{\"prompt\":\"Human: What is Paris?\\n\\nAssistant:\",\"max_tokens_to_sample\":400,\"temperature\":0.5,\"top_k\":250,\"top_p\":0.999,\"stop_sequences\":[\"\\n\\nHuman:\"],\"anthropic_version\":\"bedrock-2023-05-31\"}";
             request.Body = Utility.GetStreamFromString(body);
 
             var result = client.InvokeModelWithResponseStreamAsync(request).Result ;

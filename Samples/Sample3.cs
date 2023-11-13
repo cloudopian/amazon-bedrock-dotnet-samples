@@ -2,10 +2,9 @@
 using Amazon.BedrockRuntime.Model;
 using Amazon.Runtime;
 using Newtonsoft.Json.Linq;
-
 namespace MyBedrockTest.Samples
 {
-    //An example class to query stability stable-diffusion model using Amazon Bedrock
+    //An example class to query stability stable-diffusion model using Amazon Bedrock and generate images
     internal class Sample3 : ISample
     {
         AWSCredentials _credentials;

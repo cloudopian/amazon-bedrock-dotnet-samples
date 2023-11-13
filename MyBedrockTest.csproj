@@ -7,11 +7,49 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Scripts\clean_table.sql" />
+    <None Remove="Scripts\create_postgres_db.sql" />
+    <None Remove="Scripts\create_tables.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\create_postgres_db.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\clean_table.sql" />
+    <Content Include="Scripts\create_tables.sql" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.Bedrock" Version="3.7.201.10" />
     <PackageReference Include="AWSSDK.BedrockRuntime" Version="3.7.201.10" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.0.0-beta6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Npgsql" Version="7.0.6" />
+    <PackageReference Include="Pgvector" Version="0.1.4" />
+    <PackageReference Include="ShellProgressBar" Version="5.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Automation\" />
+    <Folder Include="Utility\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
