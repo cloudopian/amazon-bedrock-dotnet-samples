@@ -1,0 +1,110 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description": "",
+
+  "Parameters": {
+    "DevSetupNetworkStackName": {
+      "Type": "String",
+      "Default": "DevSetup-Network",
+      "Description": "Enter the name of the CloudFormation stack that created the network"
+    }
+  },
+
+  "Resources": {
+    "DBSubnetGroup": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "my-db-public-subnet-group",
+        "DBSubnetGroupName": "my-db-public-subnet-group",
+        "SubnetIds": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DevSetupNetworkStackName}-MyDev-Public-Subnet-1" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DevSetupNetworkStackName}-MyDev-Public-Subnet-2" } }
+        ]
+      }
+    },
+    "DBSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": "DB-SecurityGroup-1",
+        "GroupDescription": "Security group for Aurora PostgreSQL",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DevSetupNetworkStackName}-MyDev-VPC" } },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 1433,
+            "ToPort": 1433,
+            "CidrIp": "10.0.0.0/16",
+            "Description": "MS SQL server default port"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5432",
+            "ToPort": "5432",
+            "CidrIp": "10.0.0.0/16",
+            "Description": "PostgreSQL default port"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "DBCPG": {
+      "Type": "AWS::RDS::DBClusterParameterGroup",
+      "Properties": {
+        "Description": "My cluster parameter group",
+        "Family": "aurora-postgresql15",
+        "Parameters": {
+          "babelfishpg_tds.port": 1433,
+          "babelfishpg_tsql.migration_mode": "multi-db",
+          "babelfishpg_tsql.server_collation_name": "sql_latin1_general_cp1_ci_as",
+          "rds.babelfish_status": "on",
+          "babelfishpg_tsql.default_locale": "en-US"
+        }
+      }
+    },
+
+    "DBCluster": {
+      "Type": "AWS::RDS::DBCluster",
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "DBClusterIdentifier": "db-cluster-1",
+        "DBClusterParameterGroupName": { "Ref": "DBCPG" },
+        "DBSubnetGroupName": { "Ref": "DBSubnetGroup" },
+        "MasterUsername": "postgres",
+        "MasterUserPassword": "SuperSecretPostgreSQLPassword##123",
+        "Engine": "aurora-postgresql",
+        "EngineMode": "provisioned",
+        "EngineVersion": "15.3",
+        "Port": 5432,
+        "VpcSecurityGroupIds": [{"Ref":"DBSecurityGroup"}]
+      }
+    },
+
+    "DBInstance": {
+      "Type": "AWS::RDS::DBInstance",
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "DBInstanceIdentifier": "db-instance-1",
+        "DBSubnetGroupName": {
+          "Ref": "DBSubnetGroup"
+        },
+        "DBParameterGroupName": "default.aurora-postgresql15",
+        "Engine": "aurora-postgresql",
+        "DBClusterIdentifier": { "Ref": "DBCluster" },
+        "PubliclyAccessible": "true",
+        "DBInstanceClass": "db.t3.large"
+      }
+    }
+  },
+
+  "Outputs": {
+  }
+}

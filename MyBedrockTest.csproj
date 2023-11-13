@@ -41,7 +41,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Automation\" />
     <Folder Include="Utility\" />
   </ItemGroup>
 
