@@ -1,0 +1,2 @@
+﻿https://www.kaggle.com/datasets/ltcmdrdata/plain-text-wikipedia-202011/
+https://creativecommons.org/licenses/by-sa/4.0/
