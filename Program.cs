@@ -17,11 +17,11 @@ namespace MyBedrockTest
             ISample s4 = new Sample4(creds);
             ISample s5 = new Sample5(creds);
             ISample s6 = new Sample6(creds);
-            //s1.Run();
+            s1.Run();
             //s2.Run();
             //s3.Run();
             //s4.Run(); 
-            s5.Run(); 
+            //s5.Run(); 
             //s6.Run(); 
         }
 
