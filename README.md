@@ -1,4 +1,5 @@
-This code sample demonstrates how to use Amazon Bedrock with dotnet. 
+This code sample demonstrates how to use Amazon Bedrock with dotnet & C#. 
+
 
 ## Setup permissions
 First create an IAM user/role and attach the following policy.
@@ -28,6 +29,7 @@ If you are not familiar with IAM policy and permissions watch [this](https://www
 Open the solution using Visual Studio Community or VS Code and run it. 
 
 ## Samples
+Each sample is design to teach you a simple concept
 
 - **Sample1:** shows how to use Anthropic Claud models. 
 - **Sample2:** shows how to use Anthropic Claud models with streaming so that you get the results as quickly as possible. 
