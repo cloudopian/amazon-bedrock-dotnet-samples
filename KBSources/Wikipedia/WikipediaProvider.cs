@@ -27,7 +27,6 @@ namespace MyBedrockTest.KBSources.Wikipedia
                 }
               
             }   
-            throw new NotImplementedException();
         }
 
 

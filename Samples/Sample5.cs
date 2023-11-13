@@ -27,7 +27,8 @@ namespace MyBedrockTest.Samples
             ProgressCharacter = '-',
             BackgroundColor = ConsoleColor.Yellow,
             ForegroundColor = ConsoleColor.Red,
-            ForegroundColorDone=ConsoleColor.Green
+            ForegroundColorDone=ConsoleColor.Green,
+            CollapseWhenFinished=true
         };
         AWSCredentials _credentials;
 
@@ -45,8 +46,8 @@ namespace MyBedrockTest.Samples
 
             //To save time, we only analyze 3 Charles Dickens books
             selectedKBList.AddRange(dickensProvider.GetKBArticles().Take(3).ToList());
-            //To save time, we only analuze 10 wiki articles
-            selectedKBList.AddRange(wikipediaProvider.GetKBArticles().Take(10).ToList());
+            //To save time, we only analuze all sample wiki articles
+            selectedKBList.AddRange(wikipediaProvider.GetKBArticles());
 
 
             string connectionString = ConnectionStringProvider.GetDBConnectionString();
@@ -95,28 +96,32 @@ namespace MyBedrockTest.Samples
             {
                 Parallel.ForEach(paragraphList, parallelOption, (paragraph, state, index) =>
                 {
-                    AmazonBedrockRuntimeClient client = new AmazonBedrockRuntimeClient(_credentials, Amazon.RegionEndpoint.USEast1);
-                    InvokeModelRequest request = new InvokeModelRequest();
-                    request.ModelId = "amazon.titan-embed-text-v1";
-                    request.ContentType = "application/json";
-                    request.Accept = "application/json";
-
-                    string body = "{\"inputText\":" + Newtonsoft.Json.JsonConvert.ToString(paragraph) + "}";
-                    request.Body = Utility.GetStreamFromString(body);
-
-                    var result = client.InvokeModelAsync(request).Result;
-                    string stringResult = Utility.GetStringFromStream(result.Body);
-
-                    JObject jsonResult = JObject.Parse(stringResult);
-                    if (jsonResult["embedding"] != null)
+                    if(!string.IsNullOrEmpty(paragraph))
                     {
-                        var array = jsonResult["embedding"].ToObject<float[]>();
-                        ParagraphEmbeddingInfo embeddingInfo = new ParagraphEmbeddingInfo();
-                        embeddingInfo.ParagraphId = (int)index;
-                        embeddingInfo.Paragraph = paragraph;
-                        embeddingInfo.Embedding = array;
-                        embeddingBag.Add(embeddingInfo);
+                        AmazonBedrockRuntimeClient client = new AmazonBedrockRuntimeClient(_credentials, Amazon.RegionEndpoint.USEast1);
+                        InvokeModelRequest request = new InvokeModelRequest();
+                        request.ModelId = "amazon.titan-embed-text-v1";
+                        request.ContentType = "application/json";
+                        request.Accept = "application/json";
+
+                        string body = "{\"inputText\":" + Newtonsoft.Json.JsonConvert.ToString(paragraph) + "}";
+                        request.Body = Utility.GetStreamFromString(body);
+
+                        var result = client.InvokeModelAsync(request).Result;
+                        string stringResult = Utility.GetStringFromStream(result.Body);
+
+                        JObject jsonResult = JObject.Parse(stringResult);
+                        if (jsonResult["embedding"] != null)
+                        {
+                            var array = jsonResult["embedding"].ToObject<float[]>();
+                            ParagraphEmbeddingInfo embeddingInfo = new ParagraphEmbeddingInfo();
+                            embeddingInfo.ParagraphId = (int)index;
+                            embeddingInfo.Paragraph = paragraph;
+                            embeddingInfo.Embedding = array;
+                            embeddingBag.Add(embeddingInfo);
+                        }
                     }
+                   
                     pbChild.Tick();
                 });
             }
